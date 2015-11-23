@@ -21,9 +21,14 @@ FileList['*/Rakefile'].each { |file|
 task :config do
 
   info = Plist::parse_xml($config["plist"])
-  unless info['bundleid'].eql?($config["bundleid"])
-    info['bundleid'] = $config["bundleid"]
-    File.open($config["plist"], "wb") { |file| file.write(info.to_plist) }
+  unless !info.nil? && info['bundleid'].eql?($config['bundleid'])
+    info = {} if info.nil?
+    info['bundleid'] = $config['bundleid']
+    info['createdby'] = $config['author'] || ''
+    info['description'] = $config['description'] || ''
+    info['name'] = $config['name'] || ''
+    info['webaddress'] = $config['webaddress'] || ''
+    File.open($config['plist'], 'wb') { |file| file.write(info.to_plist) }
   end
 end
 
